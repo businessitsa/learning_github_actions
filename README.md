@@ -36,9 +36,11 @@ which intentionally models what the course teaches: actions pinned to commit
 SHAs, a least-privilege `GITHUB_TOKEN`, a build job separated from a deploy
 job, and an OIDC-authenticated Pages deployment.
 
-One-time setup: in the repository settings, under **Pages**, set the source
-to **GitHub Actions**. Every push to `main` then builds and publishes the
-site to `https://businessitsa.github.io/learning_github_actions/`.
+The workflow enables Pages automatically on its first run (`configure-pages`
+with `enablement: true`). If that step is refused by your plan or token
+policy, enable it once by hand: repository settings, **Pages**, source
+**GitHub Actions**. Every push to `main` then builds and publishes the site
+to `https://businessitsa.github.io/learning_github_actions/`.
 
 Forking this for your own audience? Update `url`, `baseUrl`,
 `organizationName` and `projectName` in

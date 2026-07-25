@@ -12,8 +12,7 @@ A Docusaurus 3 learning website, "From Commit to Cloud": a seven-module course t
 - `static/img/diagrams/` — hand-authored SVG diagrams sharing one visual system (palette documented in a comment at the top of each file). No mermaid, no external images.
 - `capstone/` — the complete worked repository learners copy for Module 7 (OpenTofu code, four workflows, a setup script). It is course material, not executed from here.
 - `docusaurus.config.ts` — docs-only mode (`routeBasePath: '/'`), `onBrokenLinks: 'throw'`.
-- `.github/workflows/deploy-pages.yml` — deploys the site to GitHub Pages; SHA-pinned actions, split build/deploy jobs.
-- `.github/workflows/github-actions-demo.yml` — the original sandbox demo workflow; harmless, runs on every push.
+- `.github/workflows/deploy-pages.yml` — builds and deploys the site to GitHub Pages on every push to main; SHA-pinned actions, split build/deploy jobs, enables Pages automatically on first run (`configure-pages` with `enablement: true`).
 - `SOURCES.md` — official documentation pages each module relied on, with retrieval dates.
 
 ## Commands
