@@ -1,0 +1,58 @@
+# .github/workflows/tofu-drift.yml
+name: Drift detection
+on:
+  schedule:
+    - cron: '17 5 * * *'   # daily, 05:17 UTC
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ARM_USE_OIDC: 'true'
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID_PLAN }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+defaults:
+  run:
+    working-directory: infra
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Install OpenTofu
+        uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4  # v2.0.2
+        with:
+          tofu_version: 1.12.5
+          tofu_wrapper: false
+
+      - name: Initialise
+        run: tofu init
+
+      - name: Plan against reality
+        id: plan
+        run: |
+          set +e
+          tofu plan -no-color -detailed-exitcode -out=driftplan
+          code=$?
+          set -e
+          echo "exitcode=$code" >> "$GITHUB_OUTPUT"
+          if [ "$code" -eq 1 ]; then exit 1; fi
+
+      - name: Report drift
+        if: steps.plan.outputs.exitcode == '2'
+        run: |
+          {
+            echo '## Drift detected'
+            echo 'Reality no longer matches the code. The differences:'
+            echo '```'
+            tofu show -no-color driftplan
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1

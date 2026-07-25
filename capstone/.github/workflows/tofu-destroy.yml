@@ -1,0 +1,65 @@
+# .github/workflows/tofu-destroy.yml
+# Deliberately manual, deliberately awkward: destroying the environment
+# requires pressing the button, typing the word destroy, and then approving
+# the prod gate. Cost control should be easy; accidents should be hard.
+name: Destroy
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type destroy to confirm you mean it
+        type: string
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: tofu-apply           # shares the apply group: never overlap with an apply
+  cancel-in-progress: false
+
+env:
+  ARM_USE_OIDC: 'true'
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID_APPLY }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+defaults:
+  run:
+    working-directory: infra
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    if: inputs.confirm == 'destroy'
+    environment: prod
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Install OpenTofu
+        uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4  # v2.0.2
+        with:
+          tofu_version: 1.12.5
+          tofu_wrapper: false
+
+      - name: Initialise
+        run: tofu init
+
+      - name: Plan the destruction
+        run: tofu plan -destroy -no-color -out=destroyplan
+
+      - name: Destroy
+        run: tofu apply destroyplan
+
+      - name: Publish the result to the run summary
+        run: |
+          {
+            echo '## Destroyed'
+            echo 'All managed resources have been removed. State is now empty:'
+            echo '```'
+            tofu state list || true
+            echo '(no resources)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

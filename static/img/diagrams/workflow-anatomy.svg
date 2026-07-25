@@ -1,0 +1,66 @@
+<!-- static/img/diagrams/workflow-anatomy.svg — Course diagram system v1
+     canvas #1a1a19 · Azure #3987e5 · OpenTofu #c98500 · developer #199e70 · GitHub neutral
+     ink #fff / #c3c2b7 / #898781 · palette CVD-validated (dataviz validator, dark surface) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" role="img" aria-labelledby="anatomyTitle anatomyDesc">
+  <title id="anatomyTitle">Anatomy of a GitHub Actions workflow</title>
+  <desc id="anatomyDesc">A workflow file contains triggering events and jobs. Each job runs on its own runner and contains ordered steps. Jobs run in parallel unless chained with needs.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#898781"/>
+    </marker>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="959" height="539" rx="12" fill="#1a1a19" stroke="#ffffff" stroke-opacity="0.1"/>
+
+  <text x="32" y="46" font-size="20" font-weight="600" fill="#ffffff">Anatomy of a GitHub Actions workflow</text>
+  <text x="32" y="70" font-size="13" fill="#898781">One YAML file declares events, jobs, and steps — GitHub provides the machines that run them</text>
+
+  <!-- Workflow container -->
+  <rect x="36" y="96" width="888" height="396" rx="12" fill="#ffffff" fill-opacity="0.03" stroke="#c3c2b7" stroke-width="1.5"/>
+  <text x="56" y="126" font-size="15" font-weight="600" fill="#ffffff">Workflow</text>
+  <text x="140" y="126" font-size="12.5" fill="#898781" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">.github/workflows/deploy.yml</text>
+
+  <!-- Triggers -->
+  <text x="56" y="162" font-size="12.5" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">on:</text>
+  <rect x="96" y="144" width="70" height="28" rx="14" fill="#ffffff" fill-opacity="0.04" stroke="#383835"/>
+  <text x="131" y="162" font-size="12" fill="#c3c2b7" text-anchor="middle" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">push</text>
+  <rect x="178" y="144" width="110" height="28" rx="14" fill="#ffffff" fill-opacity="0.04" stroke="#383835"/>
+  <text x="233" y="162" font-size="12" fill="#c3c2b7" text-anchor="middle" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">pull_request</text>
+  <rect x="300" y="144" width="150" height="28" rx="14" fill="#ffffff" fill-opacity="0.04" stroke="#383835"/>
+  <text x="375" y="162" font-size="12" fill="#c3c2b7" text-anchor="middle" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">workflow_dispatch</text>
+  <text x="470" y="162" font-size="12" fill="#898781">← events that start the workflow</text>
+
+  <!-- Job: plan -->
+  <rect x="66" y="196" width="380" height="256" rx="10" fill="#ffffff" fill-opacity="0.04" stroke="#898781" stroke-width="1.25"/>
+  <text x="86" y="226" font-size="14" font-weight="600" fill="#ffffff" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">job: plan</text>
+  <text x="86" y="248" font-size="12" fill="#898781" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">runs-on: ubuntu-latest</text>
+
+  <rect x="86" y="266" width="340" height="40" rx="8" fill="#ffffff" fill-opacity="0.04" stroke="#383835"/>
+  <text x="100" y="291" font-size="12.5" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">1 · uses: actions/checkout</text>
+  <line x1="256" y1="308" x2="256" y2="320" stroke="#898781" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="86" y="322" width="340" height="40" rx="8" fill="#ffffff" fill-opacity="0.04" stroke="#383835"/>
+  <text x="100" y="347" font-size="12.5" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">2 · uses: opentofu/setup-opentofu</text>
+  <line x1="256" y1="364" x2="256" y2="376" stroke="#898781" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="86" y="378" width="340" height="40" rx="8" fill="#c98500" fill-opacity="0.10" stroke="#c98500" stroke-opacity="0.7"/>
+  <text x="100" y="403" font-size="12.5" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">3 · run: tofu plan</text>
+
+  <!-- needs arrow -->
+  <line x1="450" y1="330" x2="512" y2="330" stroke="#898781" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="481" y="318" font-size="12" fill="#c3c2b7" text-anchor="middle" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">needs</text>
+
+  <!-- Job: apply -->
+  <rect x="520" y="196" width="370" height="256" rx="10" fill="#ffffff" fill-opacity="0.04" stroke="#898781" stroke-width="1.25"/>
+  <text x="540" y="226" font-size="14" font-weight="600" fill="#ffffff" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">job: apply</text>
+  <text x="540" y="248" font-size="12" fill="#898781" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">needs: plan · runs-on: ubuntu-latest</text>
+
+  <rect x="540" y="266" width="330" height="40" rx="8" fill="#ffffff" fill-opacity="0.04" stroke="#383835"/>
+  <text x="554" y="291" font-size="12.5" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">1 · uses: actions/checkout</text>
+  <line x1="705" y1="308" x2="705" y2="320" stroke="#898781" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="540" y="322" width="330" height="40" rx="8" fill="#ffffff" fill-opacity="0.04" stroke="#383835"/>
+  <text x="554" y="347" font-size="12.5" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">2 · uses: opentofu/setup-opentofu</text>
+  <line x1="705" y1="364" x2="705" y2="376" stroke="#898781" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="540" y="378" width="330" height="40" rx="8" fill="#c98500" fill-opacity="0.10" stroke="#c98500" stroke-opacity="0.7"/>
+  <text x="554" y="403" font-size="12.5" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">3 · run: tofu apply</text>
+
+  <text x="56" y="478" font-size="12.5" fill="#898781">Steps run in order on one runner. Jobs run in parallel on separate runners — unless chained with needs.</text>
+</svg>

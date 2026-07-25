@@ -1,0 +1,6 @@
+# OpenTofu working files: never commit state, plans or provider caches
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log

@@ -1,0 +1,68 @@
+<!-- static/img/diagrams/tofu-lifecycle.svg — Course diagram system v1
+     canvas #1a1a19 · Azure #3987e5 · OpenTofu #c98500 · developer #199e70 · GitHub neutral
+     ink #fff / #c3c2b7 / #898781 · palette CVD-validated (dataviz validator, dark surface) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" role="img" aria-labelledby="lifecycleTitle lifecycleDesc">
+  <title id="lifecycleTitle">The OpenTofu change cycle</title>
+  <desc id="lifecycleDesc">You edit .tf files describing desired state, tofu plan computes the difference against the recorded state, a human reviews the plan, and tofu apply executes it against Azure and records the new reality in the state file.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#898781"/>
+    </marker>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="959" height="539" rx="12" fill="#1a1a19" stroke="#ffffff" stroke-opacity="0.1"/>
+
+  <text x="32" y="46" font-size="20" font-weight="600" fill="#ffffff">The OpenTofu change cycle</text>
+  <text x="32" y="70" font-size="13" fill="#898781">plan shows exactly what will change — apply makes it so, and records it in state</text>
+
+  <!-- Edit -->
+  <rect x="36" y="120" width="170" height="84" rx="10" fill="#199e70" fill-opacity="0.12" stroke="#199e70" stroke-width="1.5"/>
+  <text x="121" y="152" font-size="15" font-weight="600" fill="#ffffff" text-anchor="middle">Edit .tf files</text>
+  <text x="121" y="174" font-size="12" fill="#c3c2b7" text-anchor="middle">desired state</text>
+
+  <line x1="210" y1="162" x2="262" y2="162" stroke="#898781" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Plan -->
+  <rect x="270" y="120" width="150" height="84" rx="10" fill="#c98500" fill-opacity="0.12" stroke="#c98500" stroke-width="1.5"/>
+  <text x="345" y="152" font-size="15" font-weight="600" fill="#ffffff" text-anchor="middle" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">tofu plan</text>
+  <text x="345" y="174" font-size="12" fill="#c3c2b7" text-anchor="middle">computes the diff</text>
+
+  <line x1="424" y1="162" x2="476" y2="162" stroke="#898781" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Review -->
+  <rect x="480" y="120" width="170" height="84" rx="10" fill="#199e70" fill-opacity="0.12" stroke="#199e70" stroke-width="1.5"/>
+  <text x="565" y="152" font-size="15" font-weight="600" fill="#ffffff" text-anchor="middle">Review the plan</text>
+  <text x="565" y="174" font-size="12" fill="#c3c2b7" text-anchor="middle">human checkpoint</text>
+
+  <line x1="654" y1="162" x2="706" y2="162" stroke="#898781" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Apply -->
+  <rect x="710" y="120" width="150" height="84" rx="10" fill="#c98500" fill-opacity="0.12" stroke="#c98500" stroke-width="1.5"/>
+  <text x="785" y="152" font-size="15" font-weight="600" fill="#ffffff" text-anchor="middle" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">tofu apply</text>
+  <text x="785" y="174" font-size="12" fill="#c3c2b7" text-anchor="middle">executes the plan</text>
+
+  <!-- Azure resources -->
+  <rect x="710" y="360" width="214" height="90" rx="10" fill="#3987e5" fill-opacity="0.12" stroke="#3987e5" stroke-width="1.5"/>
+  <text x="817" y="396" font-size="15" font-weight="600" fill="#ffffff" text-anchor="middle">Azure resources</text>
+  <text x="817" y="418" font-size="12" fill="#c3c2b7" text-anchor="middle">real infrastructure</text>
+
+  <line x1="785" y1="208" x2="785" y2="354" stroke="#898781" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="798" y="284" font-size="12" fill="#c3c2b7">creates / updates / destroys</text>
+
+  <!-- State file -->
+  <rect x="270" y="360" width="360" height="90" rx="10" fill="#c98500" fill-opacity="0.12" stroke="#c98500" stroke-width="1.5"/>
+  <text x="450" y="396" font-size="14.5" font-weight="600" fill="#ffffff" text-anchor="middle">State file — tofu's record</text>
+  <text x="450" y="418" font-size="12" fill="#c3c2b7" text-anchor="middle">every resource OpenTofu manages, and its last known settings</text>
+
+  <line x1="345" y1="356" x2="345" y2="212" stroke="#898781" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="333" y="288" font-size="12" fill="#c3c2b7" text-anchor="end">plan reads recorded state</text>
+
+  <line x1="706" y1="196" x2="634" y2="372" stroke="#898781" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="655" y="296" font-size="12" fill="#c3c2b7" text-anchor="end">apply records the new reality</text>
+
+  <!-- footnotes -->
+  <circle cx="52" cy="488" r="3" fill="#898781"/>
+  <text x="66" y="492" font-size="12.5" fill="#c3c2b7">First run only: tofu init downloads the azurerm provider and wires up the state backend.</text>
+  <circle cx="52" cy="514" r="3" fill="#898781"/>
+  <text x="66" y="518" font-size="12.5" fill="#c3c2b7">plan also refreshes: it reads the live Azure settings, so drift shows up in the diff.</text>
+</svg>

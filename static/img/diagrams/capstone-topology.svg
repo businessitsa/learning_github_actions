@@ -1,0 +1,81 @@
+<!-- static/img/diagrams/capstone-topology.svg — Course diagram system v1
+     canvas #1a1a19 · Azure #3987e5 · OpenTofu #c98500 · developer #199e70 · GitHub neutral
+     ink #fff / #c3c2b7 / #898781 · palette CVD-validated (dataviz validator, dark surface) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" role="img" aria-labelledby="topoTitle topoDesc">
+  <title id="topoTitle">Capstone environment topology</title>
+  <desc id="topoDesc">Inside one Azure subscription: a production resource group managed by OpenTofu containing a virtual network with a subnet, a container app, and a data storage account; plus a separate hand-created state resource group holding the tfstate storage account. A GitHub Actions runner authenticates via Microsoft Entra ID OIDC, deploys via Azure Resource Manager, and reads and writes state under a blob lease.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#898781"/>
+    </marker>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="959" height="559" rx="12" fill="#1a1a19" stroke="#ffffff" stroke-opacity="0.1"/>
+
+  <text x="32" y="46" font-size="20" font-weight="600" fill="#ffffff">Capstone environment topology</text>
+  <text x="32" y="70" font-size="13" fill="#898781">Everything the pipeline builds, and where its state lives</text>
+
+  <!-- Subscription -->
+  <rect x="36" y="96" width="620" height="420" rx="12" fill="#3987e5" fill-opacity="0.05" stroke="#3987e5" stroke-opacity="0.9" stroke-width="1.5"/>
+  <text x="56" y="122" font-size="14.5" font-weight="600" fill="#ffffff">Azure subscription</text>
+
+  <!-- RG: capstone prod -->
+  <rect x="60" y="142" width="380" height="350" rx="10" fill="#3987e5" fill-opacity="0.05" stroke="#3987e5" stroke-opacity="0.7" stroke-width="1.25"/>
+  <text x="76" y="168" font-size="13.5" font-weight="600" fill="#ffffff" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">rg-capstone-prod</text>
+  <text x="76" y="186" font-size="11.5" fill="#898781">created once · contents managed by OpenTofu</text>
+
+  <!-- VNet -->
+  <rect x="80" y="204" width="250" height="190" rx="10" fill="#3987e5" fill-opacity="0.07" stroke="#3987e5" stroke-opacity="0.6"/>
+  <text x="96" y="228" font-size="12.5" font-weight="600" fill="#ffffff" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">vnet-capstone</text>
+  <text x="96" y="246" font-size="11" fill="#898781" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">10.20.0.0/16</text>
+  <rect x="100" y="262" width="210" height="110" rx="8" fill="#3987e5" fill-opacity="0.08" stroke="#3987e5" stroke-opacity="0.5"/>
+  <text x="116" y="286" font-size="12" font-weight="600" fill="#ffffff" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">snet-app</text>
+  <text x="116" y="303" font-size="11" fill="#898781" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">10.20.1.0/24</text>
+  <rect x="116" y="316" width="178" height="42" rx="8" fill="#3987e5" fill-opacity="0.12" stroke="#3987e5" stroke-opacity="0.8"/>
+  <text x="205" y="341" font-size="12.5" fill="#c3c2b7" text-anchor="middle">container app</text>
+
+  <!-- data storage -->
+  <rect x="80" y="410" width="250" height="60" rx="8" fill="#3987e5" fill-opacity="0.08" stroke="#3987e5" stroke-opacity="0.6"/>
+  <text x="96" y="436" font-size="12.5" fill="#c3c2b7">storage account (data)</text>
+  <text x="96" y="456" font-size="11" fill="#898781" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">globally unique name, no hyphens</text>
+
+  <!-- RG: state -->
+  <rect x="464" y="142" width="172" height="190" rx="10" fill="#3987e5" fill-opacity="0.05" stroke="#3987e5" stroke-opacity="0.7" stroke-width="1.25"/>
+  <text x="478" y="168" font-size="13" font-weight="600" fill="#ffffff" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">rg-tofu-state</text>
+  <text x="478" y="186" font-size="11" fill="#898781">created once, by hand</text>
+  <rect x="478" y="204" width="144" height="54" rx="8" fill="#3987e5" fill-opacity="0.10" stroke="#3987e5" stroke-opacity="0.5"/>
+  <text x="490" y="226" font-size="12" fill="#c3c2b7">storage account</text>
+  <text x="490" y="244" font-size="11" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">container: tfstate</text>
+  <rect x="478" y="268" width="144" height="40" rx="8" fill="#3987e5" fill-opacity="0.10" stroke="#3987e5" stroke-opacity="0.5"/>
+  <text x="490" y="292" font-size="11.5" fill="#c3c2b7">lease-based locking</text>
+
+  <!-- GitHub runner -->
+  <rect x="700" y="142" width="224" height="96" rx="10" fill="#ffffff" fill-opacity="0.05" stroke="#c3c2b7" stroke-width="1.5"/>
+  <text x="812" y="172" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle">GitHub Actions runner</text>
+  <rect x="720" y="186" width="184" height="34" rx="8" fill="#c98500" fill-opacity="0.13" stroke="#c98500" stroke-width="1.25"/>
+  <circle cx="738" cy="203" r="4" fill="#c98500"/>
+  <text x="748" y="207" font-size="12.5" fill="#ffffff">OpenTofu CLI</text>
+
+  <!-- Entra -->
+  <line x1="812" y1="242" x2="812" y2="262" stroke="#898781" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="700" y="266" width="224" height="56" rx="10" fill="#3987e5" fill-opacity="0.10" stroke="#3987e5" stroke-opacity="0.7"/>
+  <text x="812" y="288" font-size="12.5" font-weight="600" fill="#ffffff" text-anchor="middle">Microsoft Entra ID</text>
+  <text x="812" y="306" font-size="11" fill="#898781" text-anchor="middle">OIDC federated credential</text>
+
+  <!-- deploy arrow -->
+  <path d="M696 190 H680 V420 H444" fill="none" stroke="#898781" stroke-width="1.75" marker-end="url(#arrow)"/>
+  <text x="560" y="412" font-size="12" fill="#c3c2b7" text-anchor="middle">deploys via ARM API</text>
+
+  <!-- state arrow -->
+  <line x1="696" y1="214" x2="640" y2="214" stroke="#898781" stroke-width="1.75" marker-end="url(#arrow)"/>
+  <text x="668" y="232" font-size="11" fill="#c3c2b7" text-anchor="middle">state</text>
+  <text x="668" y="246" font-size="11" fill="#c3c2b7" text-anchor="middle">read / write</text>
+
+  <!-- cost note -->
+  <g transform="translate(52,540)">
+    <path d="M0 -8 L8 6 L-8 6 Z" fill="#fab219"/>
+    <rect x="-1" y="-3" width="2" height="5" fill="#1a1a19"/>
+    <rect x="-1" y="3.4" width="2" height="1.8" fill="#1a1a19"/>
+  </g>
+  <text x="68" y="544" font-size="12.5" fill="#c3c2b7">Cost control: everything sits in rg-capstone-prod — tofu destroy (or deleting the group) ends the spend.</text>
+</svg>

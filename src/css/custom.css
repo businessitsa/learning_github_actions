@@ -1,0 +1,36 @@
+/**
+ * Course-wide styles. The palette follows the diagram system used in
+ * static/img/diagrams: Azure blue, OpenTofu amber, developer green.
+ */
+
+:root {
+  --ifm-color-primary: #1e6fd0;
+  --ifm-color-primary-dark: #1b64bb;
+  --ifm-color-primary-darker: #195eb1;
+  --ifm-color-primary-darkest: #154e92;
+  --ifm-color-primary-light: #2c7bda;
+  --ifm-color-primary-lighter: #3782dc;
+  --ifm-color-primary-lightest: #5595e1;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #3987e5;
+  --ifm-color-primary-dark: #2378e2;
+  --ifm-color-primary-darker: #1d70d8;
+  --ifm-color-primary-darkest: #185cb2;
+  --ifm-color-primary-light: #4f96e8;
+  --ifm-color-primary-lighter: #5a9de9;
+  --ifm-color-primary-lightest: #7fb3ee;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Course diagrams carry their own dark canvas; give them room and a
+   rounded edge so they sit well on both light and dark pages. */
+img[src*='/img/diagrams/'] {
+  border-radius: 12px;
+  display: block;
+  margin: 1.5rem auto;
+  max-width: 100%;
+}

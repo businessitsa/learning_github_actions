@@ -1,0 +1,77 @@
+<!-- static/img/diagrams/azure-identity-hierarchy.svg — Course diagram system v1
+     canvas #1a1a19 · Azure #3987e5 · OpenTofu #c98500 · developer #199e70 · GitHub neutral
+     ink #fff / #c3c2b7 / #898781 · palette CVD-validated (dataviz validator, dark surface) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 570" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" role="img" aria-labelledby="hierTitle hierDesc">
+  <title id="hierTitle">Azure hierarchy and the pipeline's identity</title>
+  <desc id="hierDesc">A Microsoft Entra tenant contains an Azure subscription, which contains two resource groups: one for the deployed environment and one for OpenTofu state. An app registration with a service principal holds a federated credential trusting GitHub OIDC, and RBAC role assignments scope its access to the two resource groups only.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#898781"/>
+    </marker>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="959" height="569" rx="12" fill="#1a1a19" stroke="#ffffff" stroke-opacity="0.1"/>
+
+  <text x="32" y="46" font-size="20" font-weight="600" fill="#ffffff">Where things live in Azure — and who may touch them</text>
+  <text x="32" y="70" font-size="13" fill="#898781">The management hierarchy (left) and the pipeline's identity with scoped role assignments (right)</text>
+
+  <!-- Tenant -->
+  <rect x="36" y="96" width="580" height="420" rx="12" fill="#3987e5" fill-opacity="0.05" stroke="#3987e5" stroke-opacity="0.9" stroke-width="1.5"/>
+  <text x="56" y="124" font-size="15" font-weight="600" fill="#ffffff">Microsoft Entra tenant</text>
+  <text x="56" y="144" font-size="12" fill="#898781">the identity directory: users, groups, app identities</text>
+
+  <!-- Subscription -->
+  <rect x="60" y="164" width="532" height="330" rx="10" fill="#3987e5" fill-opacity="0.05" stroke="#3987e5" stroke-opacity="0.7" stroke-width="1.25"/>
+  <text x="80" y="192" font-size="15" font-weight="600" fill="#ffffff">Azure subscription</text>
+  <text x="230" y="192" font-size="12" fill="#898781">billing + resource boundary</text>
+
+  <!-- Resource group: capstone -->
+  <rect x="84" y="232" width="280" height="240" rx="10" fill="#3987e5" fill-opacity="0.06" stroke="#3987e5" stroke-opacity="0.6"/>
+  <text x="100" y="258" font-size="13.5" font-weight="600" fill="#ffffff" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">rg-capstone-prod</text>
+  <text x="100" y="276" font-size="11.5" fill="#898781">the environment the pipeline deploys</text>
+  <rect x="100" y="292" width="248" height="36" rx="8" fill="#3987e5" fill-opacity="0.10" stroke="#3987e5" stroke-opacity="0.5"/>
+  <text x="114" y="315" font-size="12.5" fill="#c3c2b7">virtual network + subnet</text>
+  <rect x="100" y="336" width="248" height="36" rx="8" fill="#3987e5" fill-opacity="0.10" stroke="#3987e5" stroke-opacity="0.5"/>
+  <text x="114" y="359" font-size="12.5" fill="#c3c2b7">storage account (data)</text>
+  <rect x="100" y="380" width="248" height="36" rx="8" fill="#3987e5" fill-opacity="0.10" stroke="#3987e5" stroke-opacity="0.5"/>
+  <text x="114" y="403" font-size="12.5" fill="#c3c2b7">container app</text>
+
+  <!-- Resource group: state -->
+  <rect x="384" y="232" width="184" height="150" rx="10" fill="#3987e5" fill-opacity="0.06" stroke="#3987e5" stroke-opacity="0.6"/>
+  <text x="400" y="258" font-size="13.5" font-weight="600" fill="#ffffff" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">rg-tofu-state</text>
+  <text x="400" y="276" font-size="11.5" fill="#898781">remote state backend</text>
+  <rect x="400" y="292" width="152" height="64" rx="8" fill="#3987e5" fill-opacity="0.10" stroke="#3987e5" stroke-opacity="0.5"/>
+  <text x="414" y="314" font-size="12" fill="#c3c2b7">storage account</text>
+  <text x="414" y="334" font-size="11.5" fill="#c3c2b7" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">container: tfstate</text>
+
+  <!-- App registration / service principal -->
+  <rect x="660" y="120" width="264" height="96" rx="10" fill="#3987e5" fill-opacity="0.12" stroke="#3987e5" stroke-width="1.5"/>
+  <text x="792" y="150" font-size="15" font-weight="600" fill="#ffffff" text-anchor="middle">App registration</text>
+  <text x="792" y="170" font-size="13" fill="#c3c2b7" text-anchor="middle">+ service principal</text>
+  <text x="792" y="190" font-size="12" fill="#898781" text-anchor="middle">the pipeline's identity in Entra</text>
+
+  <!-- Federated credential -->
+  <line x1="792" y1="216" x2="792" y2="336" stroke="#898781" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="802" y="280" font-size="11.5" fill="#898781">holds</text>
+  <rect x="660" y="340" width="264" height="72" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#0ca30c" stroke-opacity="0.8" stroke-width="1.25"/>
+  <g transform="translate(682,376)">
+    <circle r="8" fill="#0ca30c"/>
+    <path d="M-3.5 0.5 L-1 3 L3.5 -2.5" fill="none" stroke="#1a1a19" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="698" y="372" font-size="13.5" font-weight="600" fill="#ffffff">Federated credential</text>
+  <text x="698" y="392" font-size="12" fill="#c3c2b7">trusts GitHub OIDC — no stored secret</text>
+
+  <!-- RBAC arrows -->
+  <path d="M656 150 H636 V452 H368" fill="none" stroke="#898781" stroke-width="1.75" marker-end="url(#arrow)"/>
+  <text x="500" y="444" font-size="12.5" fill="#c3c2b7" text-anchor="middle">Contributor — scoped to rg-capstone-prod only</text>
+
+  <path d="M656 190 H500 V228" fill="none" stroke="#898781" stroke-width="1.75" marker-end="url(#arrow)"/>
+  <text x="560" y="182" font-size="12.5" fill="#c3c2b7" text-anchor="middle">Storage Blob Data Contributor</text>
+
+  <!-- least privilege note -->
+  <g transform="translate(52,540)">
+    <circle r="8" fill="#0ca30c"/>
+    <path d="M-3.5 0.5 L-1 3 L3.5 -2.5" fill="none" stroke="#1a1a19" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="68" y="544" font-size="12.5" fill="#c3c2b7">Least privilege: roles are scoped to the two resource groups — never to the whole subscription.</text>
+</svg>

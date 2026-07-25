@@ -1,0 +1,59 @@
+# .github/workflows/tofu-apply.yml
+name: Apply
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: tofu-apply
+  cancel-in-progress: false   # never kill a running apply
+
+env:
+  ARM_USE_OIDC: 'true'
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID_APPLY }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+defaults:
+  run:
+    working-directory: infra
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Install OpenTofu
+        uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4  # v2.0.2
+        with:
+          tofu_version: 1.12.5
+          tofu_wrapper: false
+
+      - name: Initialise
+        run: tofu init
+
+      - name: Plan
+        run: tofu plan -no-color -out=tfplan
+
+      - name: Apply the saved plan
+        run: tofu apply tfplan
+
+      - name: Publish outputs to the run summary
+        run: |
+          {
+            echo '## Applied'
+            echo '### Outputs'
+            echo '```'
+            tofu output -no-color
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
