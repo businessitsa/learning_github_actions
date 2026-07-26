@@ -64,7 +64,8 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         env:
           GREETING: ${{ inputs.greeting }}
-        run: echo "You asked me to say: $GREETING"
+        run: | 
+          echo "You asked me to say: $GREETING"
 ```
 
 Commit and push it:
